@@ -7,6 +7,7 @@ use base 'Exporter';
 use vars qw/ @EXPORT_OK /;
 use Cell;
 use Carp;
+use List::Util qw/ reduce /;
 
 BEGIN{
     @EXPORT_OK = qw/
@@ -83,7 +84,7 @@ sub cond
     return nil;
 }
 
-sub walk_list
+sub mapcar
 {
     my ($list, $code) = @_;
 
@@ -99,14 +100,14 @@ sub walk_list
     }
 }
 
-sub walk_tree
+sub maptree
 {
     my ($tree, $code) = @_;
-    walk_list($tree, sub {
+    mapcar($tree, sub {
         if (atom($_)) {
             $code->($_);
         } else {
-            walk_tree($_, $code);
+            maptree($_, $code);
         }
     });
 }
@@ -116,7 +117,7 @@ sub list_string
     my $list = shift;
     my @tokens;
 
-    walk_list($list, sub {
+    mapcar($list, sub {
         if(atom($_)) {
             push @tokens, $_;
         } else {
@@ -133,14 +134,14 @@ sub lambda
 
     my %args;
     my $i = 0;
-    walk_list($arg_list, sub { $args{$_} = $i++ });
+    mapcar($arg_list, sub { $args{$_} = $i++ });
 
     return sub {
         my $values = shift;
         my @values;
-        walk_list($values, sub { push @values, $_ });
+        mapcar($values, sub { push @values, $_ });
 
-        walk_tree($expression, sub {
+        maptree($expression, sub {
             if (defined $args{$_}) {
                 $_ = $values[$args{$_}];
             }
@@ -151,14 +152,7 @@ sub lambda
 
 sub list
 {
-    my @things = reverse @_;
-
-    my $cell = nil;
-    for my $thing ( @things ) {
-        $cell = cons($thing, $cell);
-    }
-
-    return $cell;
+    reduce { cons($b, $a) } (nil, reverse @_);
 }
 
 1;

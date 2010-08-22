@@ -26,6 +26,7 @@ sub read_string
 sub read_stream
 {
     my $stream = shift;
+
     while (defined(my $char = shift @$stream)) {
         if ($char =~ /\d/) {
             return read_number($char, $stream)
@@ -64,7 +65,7 @@ sub read_symbol
 {
     my ($symbol, $stream) = @_;
     while (my $char = shift @$stream) {
-        if ($char =~ /[a-zA-Z0-9_-]/) {
+        if ($char =~ /[a-zA-Z0-9_:-]/) {
             $symbol .= $char;
         } elsif ($char =~ /\s/) {
             return $symbol;
