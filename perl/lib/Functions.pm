@@ -54,14 +54,14 @@ sub car
 {
     my $thing = shift;
     confess "Argument to car must be a list" unless ref($thing) && ref($thing) eq 'Cell';
-    return $thing->has_car() ? $thing->car() : nil;
+    return defined($thing->car()) ? $thing->car() : nil;
 }
 
 sub cdr
 {
     my $thing = shift;
     confess "Argument to cdr must be a list" unless ref($thing) && ref($thing) eq 'Cell';
-    return $thing->has_fcdr() ? $thing->cdr() : nil;
+    return defined($thing->cdr()) ? $thing->cdr() : nil;
 }
 
 sub atom
