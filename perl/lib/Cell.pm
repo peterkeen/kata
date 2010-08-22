@@ -6,8 +6,8 @@ use overload
     'fallback' => 1
 ;
 
-has 'car'    => (is => 'rw', predicate => 'has_car');
-has 'cdr'    => (is => 'rw', predicate => 'has_cdr');
+has 'car'    => (is => 'rw');
+has 'cdr'    => (is => 'rw');
 has 'is_nil' => (is => 'ro', default => 0);
 
 1;
