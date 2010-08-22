@@ -36,6 +36,13 @@ sub t
     return $T;
 }
 
+sub equal
+{
+    my ($a, $b) = @_;
+    return t if $a eq $b;
+    return nil;
+}
+
 sub cons
 {
     my ($thing, $list) = @_;
@@ -46,14 +53,14 @@ sub car
 {
     my $thing = shift;
     confess "Argument to car must be a list" unless ref($thing) && ref($thing) eq 'Cell';
-    return defined($thing->car()) ? $thing->car() : nil;
+    return $thing->has_car() ? $thing->car() : nil;
 }
 
 sub cdr
 {
     my $thing = shift;
     confess "Argument to cdr must be a list" unless ref($thing) && ref($thing) eq 'Cell';
-    return defined($thing->cdr()) ? $thing->cdr() : nil;
+    return $thing->has_fcdr() ? $thing->cdr() : nil;
 }
 
 sub atom
@@ -62,13 +69,6 @@ sub atom
     return nil if ref($thing) && ref($thing) eq 'Cell';
     return nil if equal($thing, nil);
     return t;
-}
-
-sub equal
-{
-    my ($a, $b) = @_;
-    return t if $a eq $b;
-    return nil;
 }
 
 sub cond
